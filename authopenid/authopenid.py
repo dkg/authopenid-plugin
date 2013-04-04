@@ -600,6 +600,7 @@ class AuthOpenIdPlugin(Component):
                         remote_user = new_user
 
             if allowed:
+                authname = None
                 cookie = hex_entropy()
                 cookie_lifetime = self.trac_auth_cookie_lifetime
 
@@ -620,12 +621,14 @@ class AuthOpenIdPlugin(Component):
                     authname = req.session['name']
                     if self.combined_username:
                         authname = '%s <%s>' % (authname, remote_user)
+                else:
+                    authname = remote_user
 
                 if self.use_nickname_as_authname:
                     authname = nickname
 
                 # Possibly lower-case the authname.
-                if self.lowercase_authname:
+                if authname and self.lowercase_authname:
                     authname = authname.lower()
         
                 if not self.trust_authname:
